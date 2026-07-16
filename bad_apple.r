@@ -79,6 +79,7 @@ unlink(temp_frame_folder, recursive = TRUE, force = TRUE)
 print(paste("Napatong na tanan ang edge_df, nabutang sa .csv para sigurado,", 
             "ug gitanggal ang naka-temp na folder"))
 
+# Setting sa Plot
 wlen = width(edges)
 hlen = height(edges)
 major_gap_x = 50
@@ -88,9 +89,10 @@ x_ticks = seq(-major_gap_x, wlen + major_gap_x, major_gap_x)
 y_ticks = seq(-major_gap_y, hlen + major_gap_y, major_gap_y)
 
 for (frame in seq_along(frames_path)) {
-  
+  # Tuldokanan sa Frame
   ipakita <- edge_df[edge_df$ika_ == frame, ]
   
+  # Kanbas
   plot(ipakita$x, ipakita$y,
        xlab="Kalapdon",
        ylab="Katas-on",
@@ -98,19 +100,23 @@ for (frame in seq_along(frames_path)) {
        ylim=c(0, height(edges)),
        axes=FALSE)
   
+  # BG (pina-ggplot)
   rect(-40, -40, 500, 500, col="#EBEBEB", border=NA)
   grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
   
+  # Mga Tinuldokan
   points(ipakita$x, ipakita$y,
          pch=tuldok_style,
          xlim=c(0, wlen), 
          ylim=c(0, hlen))
 
+  # Mano-mano sa axis
   axis(1, at=x_ticks, lwd.ticks=0.5)
   axis(2, at=y_ticks, lwd.ticks=0.5, las=2)
   axis(3, at=x_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
   axis(4, at=y_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
   
+  # Pangalan, subtitle, legend
   title(
     main="Hulag 1. Binad Apple",
     adj=0,
@@ -127,6 +133,7 @@ for (frame in seq_along(frames_path)) {
          bty="o",
          xpd=TRUE)
   
+  # Pangdelay
   Sys.sleep(SPF)
 }
 

@@ -28,25 +28,30 @@ list_of_dfs = list()
 
 # Usa-usahon ang mga hulagway
 for (i in seq_along(frames_path)) {
-  # Ipa-grayscale para siguradong BW ang dekolor
+  # Ipa-grayscale para siguradong naka-gray ang dekolor
   img <- grayscale(load.image(frames_path[[i]]))
+  
+  # Ipa-BW
+  img <- (img > 0.5) * 1
 
   print(paste0("Giproseso na ang ika-", i, " na frame"))
   # Pangitaa ang mga ngilbit; dili saktong kilid kay aproksima ra
   if (length(unique(img)) > 1) {
-    edges <- cannyEdges(img)
-    
-    # Tangala ang di kailangan
-    edge_df <- subset(edge_df, select = -c(z, cc))
+    edges <- cannyEdges(img, t1 = 0.01, t2 = 0.05)
     
     # Ipa-dataframe
     edge_df <- as.data.frame(edges)
     
+    # Tangala ang di kailangan
+    edge_df <- subset(edge_df, select = -c(z, cc))
+    
     # Baliktara ang y para sa pagplot
     edge_df$y <- max(edge_df$y) - edge_df$y
   } else {
-    # Kung blangko or puro ang kolor, ipablangko ang data frame
-    edge_df <- data.frame(x = numeric(0), y = numeric(0))
+    # Pangblangko (dili makit-an sa pangplot)
+    pngblangko = -67
+
+    edge_df <- data.frame(x = c(pngblangko), y = c(pngblangko))
   }
   
   # Frame number

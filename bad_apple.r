@@ -79,19 +79,53 @@ unlink(temp_frame_folder, recursive = TRUE, force = TRUE)
 print(paste("Napatong na tanan ang edge_df, nabutang sa .csv para sigurado,", 
             "ug gitanggal ang naka-temp na folder"))
 
+wlen = width(edges)
+hlen = height(edges)
+major_gap_x = 50
+major_gap_y = 25
+tuldok_style = 21
+x_ticks = seq(-major_gap_x, wlen + major_gap_x, major_gap_x)
+y_ticks = seq(-major_gap_y, hlen + major_gap_y, major_gap_y)
 
 for (frame in seq_along(frames_path)) {
   
   ipakita <- edge_df[edge_df$ika_ == frame, ]
   
-  plot(ipakita$x, ipakita$y, xlim=c(0, width(edges)), ylim=c(0, height(edges)))
+  plot(ipakita$x, ipakita$y,
+       xlab="Kalapdon",
+       ylab="Katas-on",
+       xlim=c(0, width(edges)), 
+       ylim=c(0, height(edges)),
+       axes=FALSE)
   
   rect(-40, -40, 500, 500, col="#EBEBEB", border=NA)
   grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
   
   points(ipakita$x, ipakita$y,
-         xlim=c(0, width(edges)), 
-         ylim=c(0, height(edges)))
+         pch=tuldok_style,
+         xlim=c(0, wlen), 
+         ylim=c(0, hlen))
+
+  axis(1, at=x_ticks, lwd.ticks=0.5)
+  axis(2, at=y_ticks, lwd.ticks=0.5, las=2)
+  axis(3, at=x_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
+  axis(4, at=y_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
+  
+  title(
+    main="Hulag 1. Binad Apple",
+    adj=0,
+    line=0.8,
+    cex.main = 1.5
+  )
+  
+  text(x = 240, y = 389, "(In the Style of Bad Apple)", xpd=NA, font=3, 
+       col="darkgray")
+  
+  legend("topright", c("Tuldok"), 
+         inset=c(0, -0.08),
+         pch=tuldok_style, 
+         bty="o",
+         xpd=TRUE)
   
   Sys.sleep(SPF)
 }

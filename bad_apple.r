@@ -31,12 +31,15 @@ for (i in seq_along(frames_path)) {
   # Ipa-grayscale para siguradong naka-gray ang dekolor
   img <- grayscale(load.image(frames_path[[i]]))
   
-  # Ipa-BW
+  # Ipa-BW para duha lang ka kolor
   img <- (img > 0.5) * 1
 
   print(paste0("Giproseso na ang ika-", i, " na frame"))
-  # Pangitaa ang mga ngilbit; dili saktong kilid kay aproksima ra
+  
+  
+  # Kung naay duha ka kulay (itim ug puti), ipa-Canny
   if (length(unique(img)) > 1) {
+    # Pangitaa ang mga ngilbit; dili saktong kilid kay aproksima ra
     edges <- cannyEdges(img, t1 = 0.01, t2 = 0.05)
     
     # Ipa-dataframe
@@ -48,6 +51,7 @@ for (i in seq_along(frames_path)) {
     # Baliktara ang y para sa pagplot
     edge_df$y <- max(edge_df$y) - edge_df$y
   } else {
+    # Kondili, ipablangko
     # Pangblangko (dili makit-an sa pangplot)
     pngblangko = -67
 
@@ -59,8 +63,6 @@ for (i in seq_along(frames_path)) {
   
   # Ipalista
   list_of_dfs[[length(list_of_dfs) + 1]] = edge_df
-  
-  
 }
 
 
@@ -87,7 +89,9 @@ for (frame in seq_along(frames_path)) {
   rect(-40, -40, 500, 500, col="#EBEBEB", border=NA)
   grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
   
-  points(ipakita$x, ipakita$y, xlim=c(0, width(edges)), ylim=c(0, height(edges)))
+  points(ipakita$x, ipakita$y,
+         xlim=c(0, width(edges)), 
+         ylim=c(0, height(edges)))
   
   Sys.sleep(SPF)
 }

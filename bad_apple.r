@@ -8,7 +8,7 @@ temp_frame_folder = "./frames"
 
 # Kung wala ang folder, himo-a; kondili, way mahitabo
 if (!dir.exists(temp_frame_folder)) {
-  paste("Gihimo na ang", temp_frame_folder)
+  print(paste("Gihimo na ang", temp_frame_folder))
   dir.create(temp_frame_folder)
 }
 
@@ -25,6 +25,7 @@ frames_path <- list.files(path=temp_frame_folder, full.names = TRUE)[20:25]
 # Temp Listahan
 list_of_dfs = list()
 
+# Usa-usahon ang mga hulagway
 for (i in seq_along(frames_path)) {
   # Ipa-grayscale para siguradong BW ang dekolor
   img <- grayscale(load.image(frames_path[[i]]))
@@ -47,11 +48,20 @@ for (i in seq_along(frames_path)) {
   # Ipalista
   list_of_dfs[[length(list_of_dfs) + 1]] = edge_df
   
-  paste("Giproseso na ang ika-", i, "na frame")
+  print(paste0("Giproseso na ang ika-", i, " na frame"))
 }
 
 
 # Final edge_df -- patong-patonga ang tanang listahan
 edge_df <- do.call(rbind, list_of_dfs)
 edge_df
+
+# I-save in case mawala
+write.csv(edge_df, "./edges_bad_apple.csv", row.names = FALSE)
+
+# Itanggal ang naka-temp
+unlink(temp_frame_folder, recursive = TRUE, force = TRUE)
+
+print(paste("Napatong na tanan ang edge_df, nabutang sa .csv para sigurado,", 
+            "ug gitanggal ang naka-temp na folder"))
 

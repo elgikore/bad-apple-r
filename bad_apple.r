@@ -1,4 +1,4 @@
-install.packages(c("imager", "av"))
+# install.packages(c("imager", "av"))
 library(imager)
 library(av)
 
@@ -21,7 +21,7 @@ av_video_images(
 )
 
 # Kuhaa ang path sa mga hulahulagway
-frames_path <- list.files(path=temp_frame_folder, full.names = TRUE)[1:100]
+frames_path <- list.files(path=temp_frame_folder, full.names = TRUE)
 
 # Temp Listahan
 list_of_dfs = list()
@@ -49,7 +49,8 @@ for (i in seq_along(frames_path)) {
     edge_df <- subset(edge_df, select = -c(z, cc))
     
     # Baliktara ang y para sa pagplot
-    edge_df$y <- max(edge_df$y) - edge_df$y
+    h_imager <- dim(img)[2]              # Pinakataas
+    edge_df$y <- h_imager - edge_df$y
   } else {
     # Kondili, ipablangko
     # Pangblangko (dili makit-an sa pangplot)
@@ -93,6 +94,7 @@ for (frame in seq_along(frames_path)) {
   ipakita <- edge_df[edge_df$ika_ == frame, ]
   
   # Kanbas
+  # par(mfrow = c(1, 2))
   plot(ipakita$x, ipakita$y,
        xlab="Kalapdon",
        ylab="Katas-on",
@@ -124,8 +126,7 @@ for (frame in seq_along(frames_path)) {
     cex.main = 1.5
   )
   
-  text(x = 240, y = 389, "(In the Style of Bad Apple)", xpd=NA, font=3, 
-       col="darkgray")
+  text(x = 274, y = 391, "(In the Style of Bad Apple)", xpd=NA, cex=1.5)
   
   legend("topright", c("Tuldok"), 
          inset=c(0, -0.08),

@@ -285,3 +285,4 @@ for (frame in seq_along(frames_path)) {
   Sys.sleep(SPF)
 }
 
+print("Nahuman na ang Binad Apple.")

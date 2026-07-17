@@ -107,7 +107,7 @@ hulag_3_x_label <- "Y"
 hist_y_labels <- c(hist_y_ticks[-length(hist_y_ticks)], "")
 
 
-for (i in 1:5) {
+for (i in 5:1) {
   print(paste("Magsugod na in", i))
   Sys.sleep(1)
 }

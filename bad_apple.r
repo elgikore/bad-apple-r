@@ -107,6 +107,7 @@ hulag_3_x_label <- "Y"
 hist_y_labels <- c(hist_y_ticks[-length(hist_y_ticks)], "")
 
 
+# Final Countdown
 for (i in 5:1) {
   print(paste("Magsugod na in", i))
   Sys.sleep(1)
@@ -115,6 +116,7 @@ for (i in 5:1) {
 print("Gipasalida na ang Binad Apple.")
 
 
+# Ipasalida pinaagi sa pagpa-frame by frame
 for (frame in seq_along(frames_path)) {
   # Tuldokanan sa Frame
   ipakita <- edge_df[edge_df$ika_ == frame, ]

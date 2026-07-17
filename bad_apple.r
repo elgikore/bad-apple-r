@@ -85,42 +85,46 @@ wlen = width(edges)
 hlen = height(edges)
 major_gap_x = 50
 major_gap_y = 25
+bin_width = 25
+hist_gap_x = 50
 hist_gap_y = 100
 tuldok_style = 21
 x_ticks = seq(-major_gap_x, wlen + major_gap_x, major_gap_x)
 y_ticks = seq(-major_gap_y, hlen + major_gap_y, major_gap_y)
-hist_y_ticks = seq(-hist_gap_y, hlen + hist_gap_y, hist_gap_y) 
+hist_x_ticks = seq(-hist_gap_x, wlen + (hist_gap_x * 2), hist_gap_x) 
+hist_y_ticks = seq(-hist_gap_x, 400, hist_gap_x) 
+hist_ihap_ticks = seq(-hist_gap_y, hlen + hist_gap_y, hist_gap_y) 
 
 for (frame in seq_along(frames_path)) {
   # Tuldokanan sa Frame
   ipakita <- edge_df[edge_df$ika_ == frame, ]
-  
+
   # Kanbas
   layout(
     matrix(c(1, 2,
-             1, 3), 
-           nrow=2, 
+             1, 3),
+           nrow=2,
            byrow=TRUE),  # byrow=TRUE kay mali ang pagkabutang sa FALSE
     widths  = c(2, 1),   # 2x wala, 1x tuo
     heights = c(1, 1)    # 1x taas-ubos
   )
-  
+
   # Panguna
   plot(ipakita$x, ipakita$y,
        xlab="Kalapdon",
        ylab="Katas-on",
-       xlim=c(0, wlen), 
+       xlim=c(0, wlen),
        ylim=c(0, hlen),
        axes=FALSE)
-  
+
   # BG (pina-ggplot) sa Panguna
   rect(-40, -40, 500, 500, col="#EBEBEB", border=NA)
   grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
-  
+
   # Mga Tinuldokan
   points(ipakita$x, ipakita$y,
          pch=tuldok_style,
-         xlim=c(0, wlen), 
+         xlim=c(0, wlen),
          ylim=c(0, hlen))
 
   # Mano-mano sa axis
@@ -128,7 +132,7 @@ for (frame in seq_along(frames_path)) {
   axis(2, at=y_ticks, lwd.ticks=0.5, las=2)
   axis(3, at=x_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
   axis(4, at=y_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
-  
+
   # Pangalan, subtitle, legend
   title(
     main="Hulag 1. Binad Apple",
@@ -136,61 +140,108 @@ for (frame in seq_along(frames_path)) {
     line=0.8,
     cex.main = 1.5
   )
-  
+
   text(x = 216, y = 387, "(In the Style of Bad Apple)", xpd=NA, cex=1.5)
-  
-  legend("topright", c("Tuldok"), 
+
+  legend("topright", c("Tuldok"),
          inset=c(0, -0.07),
-         pch=tuldok_style, 
+         pch=tuldok_style,
          bty="o",
          xpd=TRUE)
-  
+
+  if(all(ipakita$x == pngblangko & ipakita$y == pngblangko)) {
+    # Blangko na Histogram
+    plot(
+      NA, NA,
+      xlim=c(0, hlen),
+      ylim=c(0, 350),
+      main="Hulag 2. Distribusyon sa X",
+      xlab="X",
+      ylab="Ihap",
+      axes=FALSE
+    )
+    
+    # Mano-mano nasad sa grid ug axes
+    rect(-40, -40, 600, 600, col="#EBEBEB", border=NA)
+    grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
+    axis(1, at=hist_x_ticks, lwd.ticks=0.5)
+    axis(2, at=hist_ihap_ticks, lwd.ticks=0.5, las=2)
+    axis(3, at=hist_x_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
+    axis(4, at=hist_ihap_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
+
+    plot(
+      NA, NA,
+      xlim=c(0, hlen),
+      ylim=c(0, 350),
+      main="Hulag 3. Distribusyon sa Y",
+      xlab="Y",
+      ylab="Ihap",
+      axes=FALSE
+    )
+    
+    # Mano-mano nasad sa grid ug axes
+    rect(-40, -40, 600, 600, col="#EBEBEB", border=NA)
+    grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
+    axis(1, at=hist_y_ticks, lwd.ticks=0.5, 
+         # Tanggala ang naulahi ug ipa-concat sa blangkong string para parehas
+         # ang katas-on sa vector sa hist_y_ticks
+         labels = c(hist_y_ticks[-length(hist_y_ticks)], ""))
+    axis(2, at=hist_ihap_ticks, lwd.ticks=0.5, las=2)
+    axis(3, at=hist_y_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
+    axis(4, at=hist_ihap_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
+
+    next
+  }
+
   # Histogram sa X
-  hist(ipakita$x, 
+  hist(ipakita$x,
        main="Hulag 2. Distribusyon sa X",
-       breaks = seq(0, wlen, 25),
+       breaks = seq(0, wlen + bin_width, bin_width),
        col="#619CFF", # Pina-ggplot na kolor
-       xlim=c(0, wlen),
-       ylim=c(0, 350),
+       xlim=c(0, wlen + bin_width),
+       ylim=c(0, 500),
        xlab="X",
        ylab="Ihap",
-       
+
        # Pre-render
        panel.first={
-         rect(-40, -40, 500, 500, col="#EBEBEB", border=NA)
+         rect(-40, -40, 600, 600, col="#EBEBEB", border=NA)
          grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
        },
        axes=FALSE)
 
   # Mano-mano sa axis
-  axis(1, at=x_ticks, lwd.ticks=0.5)
-  axis(2, at=hist_y_ticks, lwd.ticks=0.5, las=2)
-  axis(3, at=x_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
-  axis(4, at=hist_y_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
-  
-  
+  axis(1, at=hist_x_ticks, lwd.ticks=0.5)
+  axis(2, at=hist_ihap_ticks, lwd.ticks=0.5, las=2)
+  axis(3, at=hist_x_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
+  axis(4, at=hist_ihap_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
+
+
   # Histogram sa Y
-  hist(ipakita$y, 
+  hist(ipakita$y,
        main="Hulag 3. Distribusyon sa Y",
-       breaks = seq(0, hlen, 25),
+       breaks = seq(0, hlen + bin_width, bin_width),
        col="#00BA38", # Pina-ggplot na kolor
-       xlim=c(0, hlen),
-       ylim=c(0, 350),
+       xlim=c(0, hlen + bin_width),
+       ylim=c(0, 500),
        xlab="Y",
        ylab="Ihap",
-       
+
        # Pre-render
        panel.first={
-         rect(-40, -40, 500, 500, col="#EBEBEB", border=NA)
+         rect(-40, -40, 600, 600, col="#EBEBEB", border=NA)
          grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
        },
        axes=FALSE)
-  
+
   # Mano-mano sa axis
-  axis(1, at=x_ticks, lwd.ticks=0.5)
-  axis(2, at=hist_y_ticks, lwd.ticks=0.5, las=2)
-  axis(3, at=x_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
-  axis(4, at=hist_y_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
+  axis(1, at=hist_y_ticks, lwd.ticks=0.5, 
+       # Tanggala ang naulahi ug ipa-concat sa blangkong string para parehas
+       # ang katas-on sa vector sa hist_y_ticks
+       labels = c(hist_y_ticks[-length(hist_y_ticks)], ""))
+  axis(2, at=hist_ihap_ticks, lwd.ticks=0.5, las=2)
+  axis(3, at=hist_y_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
+  axis(4, at=hist_ihap_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
   
   # Pangdelay
   Sys.sleep(SPF)

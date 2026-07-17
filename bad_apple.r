@@ -2,10 +2,10 @@
 library(imager)
 library(av)
 
-FPS = 10
-SPF = 1 / FPS
-source_file = "~/bad_apple.mp4"
-temp_frame_folder = "./frames"
+FPS <- 10
+SPF <- 1 / FPS
+source_file <- "~/bad_apple.mp4"
+temp_frame_folder <- "./frames"
 
 # Kung wala ang folder, himo-a; kondili, way mahitabo
 if (!dir.exists(temp_frame_folder)) {
@@ -16,15 +16,15 @@ if (!dir.exists(temp_frame_folder)) {
 # Ipa-convert gikan bidyo paadto hulagway
 av_video_images(
   source_file,
-  destdir = temp_frame_folder,
-  fps = FPS
+  destdir=temp_frame_folder,
+  fps=FPS
 )
 
 # Kuhaa ang path sa mga hulahulagway
-frames_path <- list.files(path=temp_frame_folder, full.names = TRUE)
+frames_path <- list.files(path=temp_frame_folder, full.names=TRUE)
 
 # Temp Listahan
-list_of_dfs = list()
+list_of_dfs <- list()
 
 # Usa-usahon ang mga hulagway
 for (i in seq_along(frames_path)) {
@@ -36,11 +36,11 @@ for (i in seq_along(frames_path)) {
 
   print(paste0("Giproseso na ang ika-", i, " na frame"))
   
-  
   # Kung naay duha ka kulay (itim ug puti), ipa-Canny
   if (length(unique(img)) > 1) {
     # Pangitaa ang mga ngilbit; dili saktong kilid kay aproksima ra
-    edges <- cannyEdges(img, t1 = 0.01, t2 = 0.05)
+    # t1=0.01, t2=0.05 para naay allowance, ug dili mag-kmeans
+    edges <- cannyEdges(img, t1=0.01, t2=0.05)
     
     # Ipa-dataframe
     edge_df <- as.data.frame(edges)
@@ -49,12 +49,12 @@ for (i in seq_along(frames_path)) {
     edge_df <- subset(edge_df, select = -c(z, cc))
     
     # Baliktara ang y para sa pagplot
-    h_imager <- dim(img)[2]              # Pinakataas
+    h_imager <- dim(img)[2] # Pinakataas
     edge_df$y <- h_imager - edge_df$y
   } else {
     # Kondili, ipablangko
     # Pangblangko (dili makit-an sa pangplot)
-    pngblangko = -67
+    pngblangko <- -67
 
     edge_df <- data.frame(x = c(pngblangko), y = c(pngblangko))
   }
@@ -63,7 +63,7 @@ for (i in seq_along(frames_path)) {
   edge_df$ika_ <- i
   
   # Ipalista
-  list_of_dfs[[length(list_of_dfs) + 1]] = edge_df
+  list_of_dfs[[length(list_of_dfs) + 1]] <- edge_df
 }
 
 
@@ -81,19 +81,20 @@ print(paste("Napatong na tanan ang edge_df, nabutang sa .csv para sigurado,",
             "ug gitanggal ang naka-temp na folder"))
 
 # Setting sa Plot
-wlen = width(edges)
-hlen = height(edges)
-major_gap_x = 50
-major_gap_y = 25
-bin_width = 25
-hist_gap_x = 50
-hist_gap_y = 100
-tuldok_style = 21
-x_ticks = seq(-major_gap_x, wlen + major_gap_x, major_gap_x)
-y_ticks = seq(-major_gap_y, hlen + major_gap_y, major_gap_y)
-hist_x_ticks = seq(-hist_gap_x, wlen + (hist_gap_x * 2), hist_gap_x) 
-hist_y_ticks = seq(-hist_gap_x, 400, hist_gap_x) 
-hist_ihap_ticks = seq(-hist_gap_y, hlen + hist_gap_y, hist_gap_y) 
+wlen <- width(edges)
+hlen <- height(edges)
+major_gap_x <- 50
+major_gap_y <- 25
+bin_width <- 25
+hist_gap_x <- 50
+hist_gap_y <- 100
+tuldok_style <- 21
+x_ticks <- seq(-major_gap_x, wlen + major_gap_x, major_gap_x)
+y_ticks <- seq(-major_gap_y, hlen + major_gap_y, major_gap_y)
+hist_x_ticks <- seq(-hist_gap_x, wlen + (hist_gap_x * 2), hist_gap_x) 
+hist_y_ticks <- seq(-hist_gap_x, 400, hist_gap_x) 
+hist_ihap_ticks = seq(-hist_gap_y, hlen + hist_gap_y, hist_gap_y)
+hist_ylim <- 500
 
 for (frame in seq_along(frames_path)) {
   # Tuldokanan sa Frame

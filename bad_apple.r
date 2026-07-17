@@ -34,7 +34,7 @@ for (i in seq_along(frames_path)) {
   # Ipa-BW para duha lang ka kolor
   img <- (img > 0.5) * 1
 
-  print(paste0("Giproseso na ang ika-", i, " na frame"))
+  print(paste0("Ginaproseso ron ang ika-", i, " na frame"))
   
   # Kung naay duha ka kulay (itim ug puti), ipa-Canny
   if (length(unique(img)) > 1) {
@@ -74,8 +74,7 @@ edge_df
 # Itanggal ang naka-temp
 unlink(temp_frame_folder, recursive = TRUE, force = TRUE)
 
-print(paste("Napatong na tanan ang edge_df, nabutang sa .csv para sigurado,", 
-            "ug gitanggal ang naka-temp na folder"))
+print("Napatong na tanan ang edge_df ug gitanggal ang naka-temp na folder")
 
 # Setting sa Plot
 ## Panguna
@@ -108,6 +107,12 @@ hulag_3_x_label <- "Y"
 hist_y_labels <- c(hist_y_ticks[-length(hist_y_ticks)], "")
 
 
+for (i in 1:5) {
+  print(paste("Magsugod na in", i))
+  Sys.sleep(1)
+}
+
+print("Gipasalida na ang Binad Apple.")
 
 
 for (frame in seq_along(frames_path)) {

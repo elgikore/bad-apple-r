@@ -81,20 +81,37 @@ print(paste("Napatong na tanan ang edge_df, nabutang sa .csv para sigurado,",
             "ug gitanggal ang naka-temp na folder"))
 
 # Setting sa Plot
+## Panguna
 wlen <- width(edges)
 hlen <- height(edges)
 major_gap_x <- 50
 major_gap_y <- 25
-bin_width <- 25
-hist_gap_x <- 50
-hist_gap_y <- 100
 tuldok_style <- 21
 x_ticks <- seq(-major_gap_x, wlen + major_gap_x, major_gap_x)
 y_ticks <- seq(-major_gap_y, hlen + major_gap_y, major_gap_y)
+
+## Histograms
+bin_width <- 25
+hist_gap_x <- 50
+hist_gap_y <- 100
+hist_ylim <- 700
+hist_xlim_x <- wlen + bin_width
+hist_xlim_y <- hlen + bin_width
 hist_x_ticks <- seq(-hist_gap_x, wlen + (hist_gap_x * 2), hist_gap_x) 
-hist_y_ticks <- seq(-hist_gap_x, 400, hist_gap_x) 
-hist_ihap_ticks = seq(-hist_gap_y, hlen + hist_gap_y, hist_gap_y)
-hist_ylim <- 500
+hist_y_ticks <- seq(-hist_gap_x, 400, hist_gap_x)
+hist_ihap_ticks <- seq(-hist_gap_y, hist_ylim + 100, hist_gap_y)
+hulag_2 <- "Hulag 2. Distribusyon sa X"
+hulag_3 <- "Hulag 3. Distribusyon sa Y"
+hist_y_label <- "Ihap"
+hulag_2_x_label <- "X"
+hulag_3_x_label <- "Y"
+
+## Tanggala ang naulahi ug ipa-concat sa blangkong string para parehas
+## ang katas-on sa vector sa hist_y_ticks
+hist_y_labels <- c(hist_y_ticks[-length(hist_y_ticks)], "")
+
+
+
 
 for (frame in seq_along(frames_path)) {
   # Tuldokanan sa Frame
@@ -154,16 +171,21 @@ for (frame in seq_along(frames_path)) {
     # Blangko na Histogram
     plot(
       NA, NA,
-      xlim=c(0, hlen),
-      ylim=c(0, 350),
-      main="Hulag 2. Distribusyon sa X",
-      xlab="X",
-      ylab="Ihap",
+      xlim=c(0, hist_xlim_x),
+      ylim=c(0, hist_ylim),
+      xlab=hulag_2_x_label,
+      ylab=hist_y_label,
       axes=FALSE
     )
     
+    title(
+      main=hulag_2,
+      adj=0,
+      line=0.8
+    )
+    
     # Mano-mano nasad sa grid ug axes
-    rect(-40, -40, 600, 600, col="#EBEBEB", border=NA)
+    rect(-40, -40, hist_ylim + 100, hist_ylim + 100, col="#EBEBEB", border=NA)
     grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
     axis(1, at=hist_x_ticks, lwd.ticks=0.5)
     axis(2, at=hist_ihap_ticks, lwd.ticks=0.5, las=2)
@@ -172,21 +194,23 @@ for (frame in seq_along(frames_path)) {
 
     plot(
       NA, NA,
-      xlim=c(0, hlen),
-      ylim=c(0, 350),
-      main="Hulag 3. Distribusyon sa Y",
-      xlab="Y",
-      ylab="Ihap",
+      xlim=c(0, hist_xlim_y),
+      ylim=c(0, hist_ylim),
+      xlab=hulag_3_x_label,
+      ylab=hist_y_label,
       axes=FALSE
     )
     
+    title(
+      main=hulag_3,
+      adj=0,
+      line=0.8
+    )
+    
     # Mano-mano nasad sa grid ug axes
-    rect(-40, -40, 600, 600, col="#EBEBEB", border=NA)
+    rect(-40, -40, hist_ylim + 100, hist_ylim + 100, col="#EBEBEB", border=NA)
     grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
-    axis(1, at=hist_y_ticks, lwd.ticks=0.5, 
-         # Tanggala ang naulahi ug ipa-concat sa blangkong string para parehas
-         # ang katas-on sa vector sa hist_y_ticks
-         labels = c(hist_y_ticks[-length(hist_y_ticks)], ""))
+    axis(1, at=hist_y_ticks, lwd.ticks=0.5, labels=hist_y_labels)
     axis(2, at=hist_ihap_ticks, lwd.ticks=0.5, las=2)
     axis(3, at=hist_y_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
     axis(4, at=hist_ihap_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
@@ -196,20 +220,26 @@ for (frame in seq_along(frames_path)) {
 
   # Histogram sa X
   hist(ipakita$x,
-       main="Hulag 2. Distribusyon sa X",
-       breaks = seq(0, wlen + bin_width, bin_width),
+       breaks = seq(0, hist_xlim_x, bin_width),
        col="#619CFF", # Pina-ggplot na kolor
-       xlim=c(0, wlen + bin_width),
-       ylim=c(0, 500),
-       xlab="X",
-       ylab="Ihap",
+       main="",
+       xlim=c(0, hist_xlim_x),
+       ylim=c(0, hist_ylim),
+       xlab=hulag_2_x_label,
+       ylab=hist_y_label,
 
        # Pre-render
        panel.first={
-         rect(-40, -40, 600, 600, col="#EBEBEB", border=NA)
+         rect(-40, -40, hist_ylim + 100, hist_ylim + 100, col="#EBEBEB", border=NA)
          grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
        },
        axes=FALSE)
+  
+  title(
+    main=hulag_2,
+    adj=0,
+    line=0.8
+  )
 
   # Mano-mano sa axis
   axis(1, at=hist_x_ticks, lwd.ticks=0.5)
@@ -220,26 +250,29 @@ for (frame in seq_along(frames_path)) {
 
   # Histogram sa Y
   hist(ipakita$y,
-       main="Hulag 3. Distribusyon sa Y",
-       breaks = seq(0, hlen + bin_width, bin_width),
+       breaks = seq(0, hist_xlim_y, bin_width),
        col="#00BA38", # Pina-ggplot na kolor
-       xlim=c(0, hlen + bin_width),
-       ylim=c(0, 500),
-       xlab="Y",
-       ylab="Ihap",
+       main="",
+       xlim=c(0, hist_xlim_y),
+       ylim=c(0, hist_ylim),
+       xlab=hulag_3_x_label,
+       ylab=hist_y_label,
 
        # Pre-render
        panel.first={
-         rect(-40, -40, 600, 600, col="#EBEBEB", border=NA)
+         rect(-40, -40, hist_ylim + 100, hist_ylim + 100, col="#EBEBEB", border=NA)
          grid(NULL, NULL, lty=1, lwd=1, col="#FFFFFF")
        },
        axes=FALSE)
+  
+  title(
+    main=hulag_3,
+    adj=0,
+    line=0.8
+  )
 
   # Mano-mano sa axis
-  axis(1, at=hist_y_ticks, lwd.ticks=0.5, 
-       # Tanggala ang naulahi ug ipa-concat sa blangkong string para parehas
-       # ang katas-on sa vector sa hist_y_ticks
-       labels = c(hist_y_ticks[-length(hist_y_ticks)], ""))
+  axis(1, at=hist_y_ticks, lwd.ticks=0.5, labels=hist_y_labels)
   axis(2, at=hist_ihap_ticks, lwd.ticks=0.5, las=2)
   axis(3, at=hist_y_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)
   axis(4, at=hist_ihap_ticks, lwd.ticks=0.5, tcl=0, labels=FALSE)

@@ -71,9 +71,6 @@ for (i in seq_along(frames_path)) {
 edge_df <- do.call(rbind, list_of_dfs)
 edge_df
 
-# I-save in case mawala
-write.csv(edge_df, "./edges_bad_apple.csv", row.names = FALSE)
-
 # Itanggal ang naka-temp
 unlink(temp_frame_folder, recursive = TRUE, force = TRUE)
 

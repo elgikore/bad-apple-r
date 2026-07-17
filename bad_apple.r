@@ -161,6 +161,8 @@ for (frame in seq_along(frames_path)) {
     cex.main = 1.5
   )
 
+  # I-adjust lang ang panid sa plot para tama ang pagkakita sa title ug 
+  # subtitle
   text(x = 216, y = 387, "(In the Style of Bad Apple)", xpd=NA, cex=1.5)
 
   legend("topright", c("Tuldok"),
